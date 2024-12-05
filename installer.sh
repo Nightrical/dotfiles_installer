@@ -51,6 +51,10 @@ install_packages() {
     }
     ;;
   centos | fedora | rhel)
+    # Centos Fix Mirrorlist
+    sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo
+    sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo
+    sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo
     (
       $sudo yum install -y $to_install || \
       $sudo dnf install -y $to_install
@@ -69,18 +73,19 @@ install_packages() {
   esac
 }
 
-packages=("git" "zsh" "curl" "fzf" "xdg-user-dirs" "grc" "bat" "ripgrep" "which" "tmux" "neovim" "ranger" "plocate" "httpie")
+packages=("git" "zsh" "curl" "fzf" "xdg-user-dirs" "bat" "ripgrep" "which" "tmux" "neovim" "ranger" "plocate" "httpie" "htop")
 
 case "$distro" in
 ubuntu | debian)
-  packages+=("exa" "locales" "iputils-ping" "procps")
+  packages+=("exa" "locales" "iputils-ping" "procps" "dnsutils" "tcpdump" "grc")
   ;;
 arch)
-  packages+=("eza" "glibc-locales")
+  packages+=("eza" "glibc-locales" "bind" "tcpdump" "grc")
   ;;
-centos | fedora | rhel)
-  packages+=("eza")
+centos)
+  # packages+=("eza")
   ;;
+  
 esac
 
 install_packages "${packages[@]}"
@@ -123,7 +128,13 @@ git clone https://github.com/joshskidmore/zsh-fzf-history-search "$ZSH_CUSTOM/pl
 
 ## Tweaks
 xdg-user-dirs-update
-bat cache --build || batcat cache --build
+
+# Fix command not found
+if [[ "$distro" =~ ^(ubuntu|debian)$ ]]; then
+  $sudo ln -s /usr/bin/batcat /usr/bin/bat
+  $sudo ln -s /usr/bin/exa /usr/bin/eza
+fi
+bat cache --build
 
 ## Plocate
 $sudo updatedb
