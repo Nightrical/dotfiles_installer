@@ -112,7 +112,7 @@ config checkout
 config config --local status.showUntrackedFiles no
 
 ## Changing the default shell to Zsh
-chsh -s "$(which zsh)" "$user"
+$sudo chsh -s "$(which zsh)" "$user"
 rm -f "$home/.profile"
 rm -f $home/.bash_history
 rm -f "$home/.bashrc"
@@ -141,7 +141,7 @@ $sudo updatedb
 
 ## Locale setup
 $sudo echo "LANG=en_US.UTF-8" > /etc/locale.conf
-sed -i '/^#.*en_US.UTF-8 UTF-8/s/^#//' /etc/locale.gen
+$sudo sed -i '/^#.*en_US.UTF-8 UTF-8/s/^#//' /etc/locale.gen
 $sudo locale-gen
 
 ## Changing the timezone
