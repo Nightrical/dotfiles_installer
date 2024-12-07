@@ -145,7 +145,7 @@ sed -i '/^#.*en_US.UTF-8 UTF-8/s/^#//' /etc/locale.gen
 $sudo locale-gen
 
 ## Changing the timezone
-ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
+$sudo ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
 
 # zsh -c "fast-theme XDG:catppuccin-mocha"
 
